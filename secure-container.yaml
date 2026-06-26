@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    name: example
+  name: example
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug1-13-np
+  namespace: example
+  labels:
+    podName: debug1-13-np
+spec:
+  containers:
+    - name: debug
+      image: rkalluru/debug:latest
+      resources:
+        requests:
+          cpu: 200m
+          memory: 200Mi
+        limits:
+          cpu: 300m
+          memory: 512Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        seccompProfile:
+          type: RuntimeDefault
+        runAsUser: 20000
+        runAsGroup: 20000
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
