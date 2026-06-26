@@ -35,3 +35,45 @@ spec:
   containers:
     - name: debug
       image: rkalluru/debug
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-debug1
+spec:
+  podSelector:
+    matchLabels:
+      appName: nginx
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              nname: example
+        - podSelector:
+            matchLabels:
+              podName: debug1-13-np
+      ports:
+        - protocol: TCP
+          port: 80
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    nname: example
+  name: example
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug1-13-np
+  namespace: example
+  labels:
+    podName: debug1-13-np
+spec:
+  containers:
+    - name: debug
+      image: rkalluru/debug
